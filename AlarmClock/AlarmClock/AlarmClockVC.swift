@@ -30,39 +30,54 @@ class AlarmClockVC: UIViewController {
     private var selectedDate: Date?
     private var timer: Timer?
     
+    private enum AppColors {
+        static let backgroundColor = "backgroundColor"
+        static let customRed = "customRed"
+        static let customBlue = "customBlue"
+        static let customPurple = "customPurple"
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // view
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: AppColors.backgroundColor)
 
+        // Labels
+        constantTitleLabel.textColor = .white
+        constantTimeLeftLabel.textColor = .white
+        timeLeftLabel.textColor = .white
+        
+        // Dividers
+        dividerView1.backgroundColor = UIColor(named: AppColors.customRed)
+        dividerView2.backgroundColor = UIColor(named: AppColors.customRed)
+        dividerView3.backgroundColor = UIColor(named: AppColors.customRed)
+        
         // Stacks
         timeStack.backgroundColor = view.backgroundColor
         buttonsStack.backgroundColor = view.backgroundColor
-        
-        // Title
-        
-        // Dividers
-        dividerView1.backgroundColor = .black
-        dividerView2.backgroundColor = .black
-        dividerView3.backgroundColor = .black
         
         // Date picker
         datePicker.setDate(.now, animated: true)
         
         // Segmetned control
         pickerModeSegmCtrl.selectedSegmentIndex = 0
+        pickerModeSegmCtrl.selectedSegmentTintColor = UIColor(named: AppColors.customBlue)
+        pickerModeSegmCtrl.setTitleTextAttributes(
+            [NSAttributedString.Key.foregroundColor : UIColor.white],
+            for: .normal
+        )
         
         // Buttons
         stopButton.isEnabled = false
-        stopButton.alpha = 0.5
+        stopButton.alpha = 0.3
         stopButton.layer.cornerRadius = stopButton.frame.height / 4
         stopButton.setTitle("Stop", for: .disabled)
         stopButton.setTitle("Stop", for: .normal)
         
         applyButton.layer.cornerRadius = applyButton.frame.height / 4
         applyButton.setTitle("Start", for: .normal)
+        applyButton.backgroundColor = UIColor(named: AppColors.customPurple)
     }
     
     
@@ -100,7 +115,7 @@ class AlarmClockVC: UIViewController {
             self.applyButton.alpha = 1
             
             self.stopButton.isEnabled = false
-            self.stopButton.alpha = 0.5
+            self.stopButton.alpha = 0.3
             self.stopButton.backgroundColor = .systemRed
             self.stopButton.setTitle("Stop", for: .normal)
             
@@ -119,7 +134,7 @@ class AlarmClockVC: UIViewController {
         // Turning off the controls after timer has started
         UIView.animate(withDuration: 0.3) {
             self.applyButton.isEnabled = false
-            self.applyButton.alpha = 0.5
+            self.applyButton.alpha = 0.3
             self.stopButton.alpha = 1
             self.stopButton.isEnabled = true
             self.datePicker.isEnabled = false
