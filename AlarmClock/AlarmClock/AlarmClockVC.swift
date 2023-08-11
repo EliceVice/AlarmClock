@@ -7,9 +7,9 @@
 
 import UIKit
 
-class AlarmClockVC: UIViewController {
+final class AlarmClockVC: UIViewController {
     
-    // Constant elements
+    // Static elements
     @IBOutlet private weak var constantTitleLabel: UILabel!
     @IBOutlet private weak var constantTimeLeftLabel: UILabel!
     @IBOutlet private weak var dividerView1: UIView!
@@ -30,56 +30,20 @@ class AlarmClockVC: UIViewController {
     private var selectedDate: Date?
     private var timer: Timer?
     
+    // Enum to work with App Colors in the more concise way
     private enum AppColors {
         static let backgroundColor = "backgroundColor"
         static let customRed = "customRed"
         static let customBlue = "customBlue"
-        static let customPurple = "customPurple"
+        static let customGreen = "customGreen"
+        static let customYellow = "customYellow"
     }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // view
-        view.backgroundColor = UIColor(named: AppColors.backgroundColor)
-
-        // Labels
-        constantTitleLabel.textColor = .white
-        constantTimeLeftLabel.textColor = .white
-        timeLeftLabel.textColor = .white
-        
-        // Dividers
-        dividerView1.backgroundColor = UIColor(named: AppColors.customRed)
-        dividerView2.backgroundColor = UIColor(named: AppColors.customRed)
-        dividerView3.backgroundColor = UIColor(named: AppColors.customRed)
-        
-        // Stacks
-        timeStack.backgroundColor = view.backgroundColor
-        buttonsStack.backgroundColor = view.backgroundColor
-        
-        // Date picker
-        datePicker.setDate(.now, animated: true)
-        
-        // Segmetned control
-        pickerModeSegmCtrl.selectedSegmentIndex = 0
-        pickerModeSegmCtrl.selectedSegmentTintColor = UIColor(named: AppColors.customBlue)
-        pickerModeSegmCtrl.setTitleTextAttributes(
-            [NSAttributedString.Key.foregroundColor : UIColor.white],
-            for: .normal
-        )
-        
-        // Buttons
-        stopButton.isEnabled = false
-        stopButton.alpha = 0.3
-        stopButton.layer.cornerRadius = stopButton.frame.height / 4
-        stopButton.setTitle("Stop", for: .disabled)
-        stopButton.setTitle("Stop", for: .normal)
-        
-        applyButton.layer.cornerRadius = applyButton.frame.height / 4
-        applyButton.setTitle("Start", for: .normal)
-        applyButton.backgroundColor = UIColor(named: AppColors.customPurple)
+        setUI()
     }
-    
     
     @IBAction private func pickerModeChanged(_ sender: UISegmentedControl) {
         UIView.animate(withDuration: 0.2) {
@@ -149,14 +113,14 @@ class AlarmClockVC: UIViewController {
 
             UIView.transition(with: sender, duration: 0.2) {
                 sender.setTitle("Continue", for: .normal)
-                sender.backgroundColor = .systemGreen
+                sender.backgroundColor = UIColor(named: AppColors.customYellow)
             }
         } else {
             self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerFired), userInfo: nil, repeats: true)
 
             UIView.transition(with: sender, duration: 0.2) {
                 sender.setTitle("Stop", for: .normal)
-                sender.backgroundColor = .red
+                sender.backgroundColor = UIColor(named: AppColors.customRed)
             }
         }
     
@@ -198,4 +162,58 @@ class AlarmClockVC: UIViewController {
         // Show the alert
         present(alert, animated: true)
     }
+    
+    private func setUI() {
+        // view
+        view.backgroundColor = UIColor(named: AppColors.backgroundColor)
+
+        // Labels
+        constantTitleLabel.textColor = .white
+        constantTimeLeftLabel.textColor = .white
+        timeLeftLabel.textColor = .white
+        
+        // Dividers
+        dividerView1.backgroundColor = .white
+        dividerView2.backgroundColor = .white
+        dividerView3.backgroundColor = .white
+        
+        // Stacks
+        timeStack.backgroundColor = view.backgroundColor
+        buttonsStack.backgroundColor = view.backgroundColor
+        
+        // Date picker
+        datePicker.setValue(UIColor.white, forKeyPath: "textColor")
+        
+        // Segmetned control
+        pickerModeSegmCtrl.selectedSegmentIndex = 0
+        pickerModeSegmCtrl.selectedSegmentTintColor = UIColor(named: AppColors.customBlue)
+        pickerModeSegmCtrl.setTitleTextAttributes(
+            [NSAttributedString.Key.foregroundColor : UIColor.white,
+             NSAttributedString.Key.font : UIFont.systemFont(ofSize: UIFont.systemFontSize)],
+            for: .normal
+        )
+        
+        pickerModeSegmCtrl.setTitleTextAttributes(
+            [NSAttributedString.Key.foregroundColor : UIColor.white,
+             NSAttributedString.Key.font : UIFont.systemFont(ofSize: UIFont.systemFontSize + 2)],
+            for: .selected
+        )
+        
+        
+        // Buttons
+        let refreshImage = UIImage(systemName: "arrow.clockwise", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
+        refreshButton.setImage(refreshImage, for: .normal)
+        
+        stopButton.isEnabled = false
+        stopButton.alpha = 0.3
+        stopButton.layer.cornerRadius = stopButton.frame.height / 4
+        stopButton.setTitle("Stop", for: .disabled)
+        stopButton.setTitle("Stop", for: .normal)
+        stopButton.backgroundColor = UIColor(named: AppColors.customRed)
+        
+        applyButton.layer.cornerRadius = applyButton.frame.height / 4
+        applyButton.setTitle("Start", for: .normal)
+        applyButton.backgroundColor = UIColor(named: AppColors.customGreen)
+    }
 }
+
