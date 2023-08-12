@@ -69,7 +69,7 @@ final class AlarmClockVC: UIViewController {
         fillTimeLeftLabelWith(date: sender.date)
     }
     
-    @IBAction private func refreshButtonTapped(_ sender: UIButton) {
+    @IBAction private func refreshButtonTapped() {
         timeLeftLabel.text = "00:00:00"
         selectedDate = nil
         timer?.invalidate()
@@ -123,10 +123,25 @@ final class AlarmClockVC: UIViewController {
                 sender.backgroundColor = UIColor(named: AppColors.customRed)
             }
         }
-    
     }
     
     @objc private func timerFired() {
+        
+        // Ending the timer when the time is expired
+        guard let hours = Calendar.current.dateComponents([.hour], from: selectedDate!).hour,
+              let minutes = Calendar.current.dateComponents([.minute], from: selectedDate!).minute,
+              let seconds = Calendar.current.dateComponents([.second], from: selectedDate!).second
+        else {
+            showTheAlert(title: "Error", message: "Failded to get components 'timerFired()'")
+            timer?.invalidate()
+            return
+        }
+        
+        if hours == 0 && minutes == 0 && seconds == 0 {
+            refreshButtonTapped()
+            showTheAlert(title: "The end!", message: "The timer has left")
+            return
+        }
         
         // Decrease date by one second
         var decreaseSecondsComponent = DateComponents()
@@ -135,7 +150,7 @@ final class AlarmClockVC: UIViewController {
         if let decreasedDate = Calendar.current.date(byAdding: decreaseSecondsComponent, to: selectedDate!) {
             selectedDate = decreasedDate
         } else {
-            showTheAlert(title: "Error", message: "Failded to decrease date")
+            showTheAlert(title: "Error", message: "Failded to decrease date 'timerFired()'")
         }
         
         // Put the date in the timeLeftLabel
@@ -164,6 +179,7 @@ final class AlarmClockVC: UIViewController {
     }
     
     private func setUI() {
+        
         // view
         view.backgroundColor = UIColor(named: AppColors.backgroundColor)
 
@@ -192,13 +208,11 @@ final class AlarmClockVC: UIViewController {
              NSAttributedString.Key.font : UIFont.systemFont(ofSize: UIFont.systemFontSize)],
             for: .normal
         )
-        
         pickerModeSegmCtrl.setTitleTextAttributes(
             [NSAttributedString.Key.foregroundColor : UIColor.white,
              NSAttributedString.Key.font : UIFont.systemFont(ofSize: UIFont.systemFontSize + 2)],
             for: .selected
         )
-        
         
         // Buttons
         let refreshImage = UIImage(systemName: "arrow.clockwise", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
