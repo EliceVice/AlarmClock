@@ -80,7 +80,7 @@ final class AlarmClockVC: UIViewController {
             
             self.stopButton.isEnabled = false
             self.stopButton.alpha = 0.3
-            self.stopButton.backgroundColor = .systemRed
+            self.stopButton.backgroundColor = UIColor(named: AppColors.customRed)
             self.stopButton.setTitle("Stop", for: .normal)
             
             self.datePicker.isEnabled = true
